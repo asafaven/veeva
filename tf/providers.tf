@@ -4,8 +4,9 @@ provider "google" {
 }
 
 provider "kubernetes" {
-  host = var.kube_host
+  config_path = "~/.kube/config"
 }
+
 
 provider "helm" {
   kubernetes {

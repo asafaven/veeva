@@ -1,8 +1,6 @@
 resource "helm_release" "nginx_ingress" {
   name       = "nginx-ingress-controller"
-#   repository = "https://charts.bitnami.com/bitnami"
   repository = "https://kubernetes.github.io/ingress-nginx"
-#   chart      = "nginx-ingress-controller"
   chart = "ingress-nginx"
   set {
     name  = "deletion_protection"
@@ -29,16 +27,18 @@ resource "helm_release" "nginx_ingress" {
   ]
 }
 
-resource "helm_release" "external_dns" {
-  name       = "external-dns"
-
-  repository = "https://kubernetes-sigs.github.io/external-dns"
-  chart      = "external-dns"
-  set {
-    name  = "service.type"
-    value = "ClusterIP"
+resource "kubernetes_namespace" "web" {
+  metadata {
+    name = "web"
   }
+}
+resource "helm_release" "web" {
+  name       = "web"
+  namespace  = "web"
+  chart      = "../helm/veeva-nginx"
   depends_on = [
-    google_container_node_pool.nodepool
+    google_container_node_pool.nodepool,
+    helm_release.nginx_ingress,
+    kubernetes_namespace.web
   ]
 }
