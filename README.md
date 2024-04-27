@@ -13,6 +13,8 @@ Prerequisites for installation:
 
 Terraform Providers
 -------------------
+Configured on tf/providers.tf
+
  * google - to perform actions on gcp, authorized to the relevant account by the current gcloud connection.
  * kubernetes - used to create the relevant namespace for the web deployment. Authorized by the created kubernetes cluster data (takes token after cluster is created)
  * helm - used for helm deploying, authorized by the same way as the kubernetes
