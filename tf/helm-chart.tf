@@ -1,4 +1,7 @@
 resource "helm_release" "nginx_ingress" {
+  provisioner "local-exec" {
+    command = "gcloud container clusters get-credentials veeva-cluster --zone ${var.zone} --project ${var.project_id}"
+  }
   name       = "nginx-ingress-controller"
   repository = "https://kubernetes.github.io/ingress-nginx"
   chart = "ingress-nginx"
@@ -39,7 +42,7 @@ resource "kubernetes_namespace" "web" {
 resource "helm_release" "web" {
   name       = "web"
   namespace  = "web"
-  chart      = "../helm/veeva-nginx"
+  chart      = "../helm/web"
   depends_on = [
     google_container_node_pool.nodepool,
     helm_release.nginx_ingress,

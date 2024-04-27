@@ -4,5 +4,6 @@ terraform {
       source = "hashicorp/kubernetes"
     }
     google ={}
+    helm = {}
   }
 }
