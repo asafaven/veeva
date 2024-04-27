@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: nginx-config
+  name: nginx-config-1
   namespace: default
 data:
   index.html: |
     <html>
-    <h2> This is Veeva Deployment!!!! </h2>
+    <h2> This is Deployment #1 </h2>
     </html>
