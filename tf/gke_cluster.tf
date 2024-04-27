@@ -5,7 +5,6 @@ resource "google_service_account" "gke-cluster-sa" {
 
 resource "google_project_iam_member" "gke-cluster-sa-iam-member" {
   project = var.project_id
-  # role    = "roles/container.defaultNodeServiceAccount"
   role    = "roles/editor"
   member  = google_service_account.gke-cluster-sa.member
 }
@@ -15,7 +14,6 @@ resource "google_container_cluster" "gke-cluster" {
   location = var.zone
   network = google_compute_network.vpc.id
   subnetwork = google_compute_subnetwork.vpc-subnet.name
-  # cluster_ipv4_cidr = google_compute_subnetwork.vpc-subnet.ip_cidr_range
   remove_default_node_pool = true
   initial_node_count       = 1
   deletion_protection = false
