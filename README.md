@@ -66,9 +66,13 @@ Web Chart:
 ----------
 
 The web chart includes the following templates:
+
      * nginx-deployment.yaml - the nginx web server deployment, referenced to volume mount of the configmap includes the html page to load up.
+
      * nginx-html-config.yaml - The configmap includes the html page to load up.
+
      * nginx-service.yaml - The requests are done with ingress, so we can use ClusterIP service, that allows only internal cluster connections to the pod.
+     
      * ingress.yaml - defines the ingress object. The nginx ingress controller looks for the ingress objects, attach to them the LoadBalancer external ip. When request is done to the ingress, the nginx ingress controller leads the request by the dns it is sent to. 
 
 
