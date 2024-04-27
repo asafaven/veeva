@@ -31,7 +31,11 @@ resource "kubernetes_namespace" "web" {
   metadata {
     name = "web"
   }
+  depends_on = [
+    google_container_node_pool.nodepool
+  ]
 }
+
 resource "helm_release" "web" {
   name       = "web"
   namespace  = "web"
