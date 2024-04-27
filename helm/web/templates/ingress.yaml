@@ -7,13 +7,13 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: veeva-ingress.info
+  - host: {{ .Values.host }}
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: my-release-nginx
+            name: nginx-service
             port:
               number: 80
