@@ -19,11 +19,3 @@ variable "cluster_name" {
 variable "nodepool_name" {
   default = "veeva-nodepool"
 }
-
-variable "kube_host" {
-  default = "veeva-kube-host"
-}
-
-# variable "primary_cidr_range" {
-#   description = "veeva-kube-host"
-# }
