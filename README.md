@@ -4,7 +4,7 @@ The cluster we create is single zone. The region and zone can be configured ont 
 Prerequesites for installation:
 -------------------------------
  - GCP Account with project api enabled for compute.googleapis.com,iam.googleapis.com,iamcredentials.googleapis.com
- - gcloud authorized to the relevant account (I.E. gcloud auth login)
+ - gcloud authorized to the relevant account (I.E. gcloud auth application-default login)
  - Terraform installed on client machine
 
 
@@ -56,7 +56,6 @@ The web chart includes the following templates:
      - ingress.yaml - defines the ingress object. The nginx ingress controller looks for the ingress objects, attach to them the LoadBalancer external ip. When request is done to the ingress, the nginx ingress controller leads the request by the dns it is sent to. 
 
 
-
 The ingress can be tested using:
 --------------------------------
 In order to test the ingresses without publishing the ips to a public domain we can do the following:
@@ -64,3 +63,8 @@ NGINX_SVC_EXT_IP = $(kubectl get services --namespace default nginx-ingress-cont
 curl $NGINX_SVC_EXT_IP -H "Host: test.test-veeva.com"
 If we receive the html page, we are good :-)
 
+What can we do to improve the project?
+--------------------------------------
+A - Set the service account to the relevant roles, allows only the permissions required.
+B - Improve gcp authorization using I.E credentials keyfile stored on Hashicorp Vault.
+C - 
