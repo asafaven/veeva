@@ -2,7 +2,7 @@ Solution for the task:
 ----------------------
 
 The task was done using terraform tool.
-The cluster we create is single zone. The region and zone can be configured ont he terraform.tfvars file.
+
 
 Prerequisites for installation:
 -------------------------------
