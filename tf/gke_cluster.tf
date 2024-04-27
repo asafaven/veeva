@@ -12,14 +12,14 @@ resource "google_project_iam_member" "gke-cluster-sa-iam-member" {
 
 resource "google_container_cluster" "gke-cluster" {
   name     = var.cluster_name
-  location = var.region
+  location = var.zone
   network = google_compute_network.vpc.id
   subnetwork = google_compute_subnetwork.vpc-subnet.name
+  # cluster_ipv4_cidr = google_compute_subnetwork.vpc-subnet.ip_cidr_range
   remove_default_node_pool = true
   initial_node_count       = 1
   deletion_protection = false
   ip_allocation_policy {
-    # cluster_ipv4_cidr_block =  google_compute_subnetwork.vpc-subnet.ip_cidr_range
     cluster_secondary_range_name  = google_compute_subnetwork.vpc-subnet.secondary_ip_range[0].range_name
     services_secondary_range_name = google_compute_subnetwork.vpc-subnet.secondary_ip_range[1].range_name
   }
@@ -27,7 +27,7 @@ resource "google_container_cluster" "gke-cluster" {
 
 resource "google_container_node_pool" "nodepool" {
   name       = var.nodepool_name
-  location   = var.region
+  location   = var.zone
   cluster    = google_container_cluster.gke-cluster.name
   node_count = 1
 

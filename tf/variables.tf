@@ -1,24 +1,29 @@
 #VPC
 variable "project_id" {
   description = "project id"
+  default = "veeva"
 }
 
 variable "region" {
-  description = "us-east1"
+  default = "us-east1"
+}
+
+variable "zone" {
+  default = "us-east1-b"
 }
 
 variable "cluster_name" {
-  description = "veeva-cluster"
+  default = "veeva-cluster"
 }
 
 variable "nodepool_name" {
-  description = "veeva-nodepool"
+  default = "veeva-nodepool"
 }
 
 variable "kube_host" {
-  description = "veeva-kube-host"
+  default = "veeva-kube-host"
 }
 
-variable "primary_cidr_range" {
-  description = "veeva-kube-host"
-}
+# variable "primary_cidr_range" {
+#   description = "veeva-kube-host"
+# }
