@@ -1,7 +1,10 @@
+Solution for the task:
+----------------------
+
 The task was done using terraform tool.
 The cluster we create is single zone. The region and zone can be configured ont he terraform.tfvars file.
 
-Prerequesites for installation:
+Prerequisites for installation:
 -------------------------------
  - GCP Account with project api enabled for compute.googleapis.com,iam.googleapis.com,iamcredentials.googleapis.com
  - gcloud authorized to the relevant account (I.E. gcloud auth login)
@@ -26,7 +29,7 @@ We create a VPC network, and subnetwork that includes three /24 ranges:
     * subnet-secondary-1 - intended for pod ips
     * subnet-secondary-2 - intended for service ips
 
-B - Create Cluster, Nodepool and service account
+B - Create Cluster, Nodepool and Service Account
 ------------------------------------------------
 The cluster is configured on tf/gke_cluster.tf
 
@@ -38,21 +41,30 @@ The cluster is configured on tf/gke_cluster.tf
     
 C - Apply nginx-ingress-controller
 ----------------------------------
+
+Nginx ingress controller application is configured on tf/helm-cart.tf
+
 Nginx ingress controller is applied using helm. The following configurations were added:
+
     * deletion_protection false -> in order to allow deleting it and creating it again.
     * rbac.create - create the relevant permissions required on the rbac cluster in order to collect the ingresses and expose them.
     * controller.service.type - Load balancer -> in order to verify that the nginx service account is created by load balanacer type with the relevant gcp loadbalaner.
     * controller.service.externalTrafficPolicy = Local  -> To provide the external ip address of the nginx controller service, and not the external ip of the node.
-    * controller.publishService.enabled = true -> similar reason (maybe one of those two is deprecated, but anyway to make it work I added both of them)
+    * controller.publishService.enabled = true -> similar reason (maybe one of those two is deprecated)
 
 D - Apply web test application
 ------------------------------
+
+Web test application is configured on tf/helm-cart.tf
+
     * Creates "web" namespace terraform object
     * Runs the web chart located on helm/web
 
 Web Chart:
 ----------
+
 The web chart includes the following templates:
+
      * nginx-deployment.yaml - the nginx web server deployment, referenced to volume mount of the configmap includes the html page to load up.
      * nginx-html-config.yaml - The configmap includes the html page to load up.
      * nginx-service.yaml - The requests are done with ingress, so we can use ClusterIP service, that allows only internal cluster connections to the pod.
@@ -63,8 +75,29 @@ The web chart includes the following templates:
 The ingress can be tested using:
 --------------------------------
 In order to test the ingresses without publishing the ips to a public domain we can do the following:
-- NGINX_SVC_EXT_IP = $(kubectl get services --namespace default nginx-ingress-controller-ingress-nginx-controller --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+
+NGINX_SVC_EXT_IP = $(kubectl get services --namespace default nginx-ingress-controller-ingress-nginx-controller --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+
 curl $NGINX_SVC_EXT_IP -H "Host: test.test-veeva.com"
 
 If we receive the html page, we are good :-)
+
+
+What can we do to improve the project?
+--------------------------------------
+A - Set the service account to the relevant roles, allows only the permissions required.
+
+B - Improve gcp authorization using I.E credentials keyfile stored on Hashicorp Vault.
+
+C - Make the project more generic:
+
+     * Add option to send configurations to the helm charts form the values.
+     
+     * More configurations for the resources. I.E. machine type for nodepools, ip cidr's ext.
+     
+     * Add option to create more the one resource, I.E. to add more subnetworks, clusters ext.
+     
+     * This project uses gcp terraform resources and it is not cloud agnostic. Due to the fact that we need to create cloud resources, we cannot do it cloud agnostic, but we can supprtage of more cloud provisioners as AWS or Azure.
+     
+D - Security - It depends on the real usage, but we can use firewalls prevent kubectl connecting to the cluster only from specified sources, using firewalls for the 22 port (ssh) and 10250 (kubelet api). In addition from all other sources we can block all ports besides 80 (or 443 if we are using https).
 
