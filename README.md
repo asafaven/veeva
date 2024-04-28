@@ -2,7 +2,8 @@ Solution for the task:
 ----------------------
 
 The task was done using terraform tool.
-
+Running the terraform should be done by:
+veeva/tf/terraform apply
 
 Prerequisites for installation:
 -------------------------------
